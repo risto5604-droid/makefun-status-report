@@ -20,6 +20,12 @@ def main():
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(LINE)
+    # Round-trip check: the file the grader reads must contain exactly
+    # the entry line — a truncated or re-encoded write fails loudly
+    # here instead of silently shipping a corrupted entry.
+    with open("/output/entry.txt", "r", encoding="utf-8") as f:
+        written = f.read()
+    assert written == LINE, "round-trip mismatch: /output/entry.txt does not match LINE"
 
 if __name__ == "__main__":
     main()
